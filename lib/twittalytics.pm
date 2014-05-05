@@ -16,4 +16,4 @@ get '/' => sub {
   return $twitter_client->fetch_bearer_token;
 };
 
-true;
+1;
