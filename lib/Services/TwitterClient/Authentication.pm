@@ -1,6 +1,7 @@
 package Services::TwitterClient::Authentication;
 
 use Dancer ':syntax';
+
 use Moose;
 use namespace::autoclean;
 
@@ -12,8 +13,27 @@ use Encode qw/encode_utf8/;
 use URI::Escape;
 use Data::Dumper;
 
-has 'consumer_key'    => (isa => 'Str', is => 'ro', default => config->{"twitter_consumer_key"});
-has 'consumer_secret' => (isa => 'Str', is => 'ro', default => config->{"twitter_consumer_secret"});
+# Source .env file
+# TODO - Refactor this out into another object. -MN 20140505
+BEGIN {
+  sub source_env {
+    open(my $fh, "<", ".env") || die "Could not open .env: $!";
+
+    while (<$fh>) {
+      chomp;
+      my ($k, $v) = split /=/, $_, 2;
+      $ENV{$k} = $v;
+    }
+  }
+
+  source_env;
+
+  die("Please set TWITTER_API_KEY in your .env file") unless $ENV{"TWITTER_API_KEY"};
+  die("Please set TWITTER_API_SECRET in your .env file") unless $ENV{"TWITTER_API_SECRET"};
+}
+
+has 'consumer_key'    => (isa => 'Str', is => 'ro', default => $ENV{"TWITTER_API_KEY"});
+has 'consumer_secret' => (isa => 'Str', is => 'ro', default => $ENV{"TWITTER_API_SECRET"});
 has 'base_uri'        => (isa => 'Str', is => 'ro', default => 'https://api.twitter.com/');
 has 'bearer_token'    => (isa => 'Str', is => 'rw');
 
