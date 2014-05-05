@@ -10,7 +10,7 @@ lib/Models/Tweets.pm
 lib/Models/TwitterUser.pm
 lib/Services/TwitterClient.pm
 lib/Services/TwitterClient/Authentication.pm
-lib/Services/TwitterClient/Methods.pm
+lib/Services/TwitterClient/API.pm
 lib/Twittalytics.pm
 public/css/style.css
 public/css/error.css

@@ -11,9 +11,12 @@ use Services::TwitterClient;
 
 our $VERSION = '0.1';
 
-get '/' => sub {
+prefix '/api';
+
+get "/users/:username/recent_statuses" => sub {
   my $twitter_client = Services::TwitterClient->new;
-  return $twitter_client->fetch_bearer_token;
+  content_type 'application/json';
+  return $twitter_client->get_statuses_for_user(params->{username});
 };
 
 1;

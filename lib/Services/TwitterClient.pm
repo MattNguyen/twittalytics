@@ -1,32 +1,16 @@
 package Services::TwitterClient;
 
+use Dancer ':syntax';
 use Moose;
 use namespace::autoclean;
+use Cwd 'realpath';
+use Data::Dumper;
 
-use Services::TwitterClient::Authentication;
+use Services::TwitterClient::API;
 
-sub fetch_bearer_token {
-  return Services::TwitterClient::Authentication->new->fetch_bearer_token;
+sub get_statuses_for_user {
+  my ($self, $username) = @_;
+  return Services::TwitterClient::API->new->get_statuses_for_user($username);
 }
-
-# Helpers ???
-sub query_string_for {
-  my ( $self, $args ) = @_;
-
-  my @pairs;
-  while ( my ($k, $v) = each %$args ) {
-    push @pairs, join '=', map URI::Escape::uri_escape_utf8($_,'^\w.~-'), $k, $v;
-  }
-
-  return join '&', @pairs;
-}
-
-sub encode_args {
-  my ($self, $args) = @_;
-
-  return { map { utf8::upgrade($_) unless ref($_); $_ } %$args };
-}
-
- __PACKAGE__->meta->make_immutable;
 
 1;

@@ -15,7 +15,7 @@ has 'environment'     => (isa => "Models::Environment", is => 'ro', default => s
 has 'base_uri'        => (isa => 'Str', is => 'ro', default => 'https://api.twitter.com/');
 has 'bearer_token'    => (isa => 'Str', is => 'rw');
 
-sub fetch_bearer_token {
+sub get_bearer_token {
   my $self = shift;
 
   if ($self->_bearer_token_exists) {
@@ -77,11 +77,6 @@ sub _encoded_bearer_token_credentials {
 sub _authentication_url {
   my $self = shift;
   return $self->base_uri . 'oauth2/token';
-}
-
-sub _get_user_url {
-  my $self = shift;
-  return $self->base_uri . 'users/show';
 }
 
  __PACKAGE__->meta->make_immutable;
