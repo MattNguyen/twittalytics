@@ -7,7 +7,9 @@ use Data::Dumper;
 use Services::TwitterClient::Authentication;
 use Dancer::Plugin::Redis;
 use Models::Tweet;
+use Models::TwitterUser;
 use HTTP::Date;
+use Array::Utils qw(:all);
 
 has 'base_uri' => (isa => 'Str', is => 'ro', default => 'https://api.twitter.com/1.1/');
 
@@ -89,6 +91,88 @@ sub get_statuses_for_user {
   return $serialized_response;
 }
 
+sub get_common_friends {
+  my ($self, $username1, $username2) = @_;
+  my $ttl = 60;
+  my $intersection_key = $self->_intersection_key($username1, $username2);
+  my $serialized_response;
+
+  # FIGURE OUT API PAGINATION
+  # * getting friend_ids has cursor ids to page back and forth
+  # * ids are different depending on user
+  # * endpoint should direct requsts with pagination params to some other function that continues the pagination chain to twitter
+  if ($intersection_key) {
+    my $request_date     = str2time(redis->hget($intersection_key, 'request_date'));
+    my $current_date     = str2time(scalar localtime);
+
+    if ($current_date > ($request_date + $ttl)) {
+      $serialized_response = $self->_get_intersection_results($username1, $username2);
+    } else {
+      $serialized_response = redis->hget($intersection_key, "common_friends");
+    }
+  } else {
+    $serialized_response = $self->_get_intersection_results($username1, $username2);
+  }
+
+  return $serialized_response;
+}
+
+sub _get_intersection_results {
+  my ($self, $username1, $username2) = @_;
+
+  # Get list of friend ids for username1
+  my $user1_follow_response              = $self->_response($self->_get_friends_ids_url($username1));
+  my $deserialized_user1_follow_response = from_json($user1_follow_response->content);
+  redis->hmset($username1 . "_friend_ids",
+    "request_date"    => $user1_follow_response->header('date'),
+    "ids"             => to_json($deserialized_user1_follow_response->{ids}),
+    "previous_cursor" => $deserialized_user1_follow_response->{previous_cursor},
+    "next_cursor"     => $deserialized_user1_follow_response->{next_cursor},
+  );
+
+  # Get list of friend ids for username2
+  my $user2_follow_response              = $self->_response($self->_get_friends_ids_url($username2));
+  my $deserialized_user2_follow_response = from_json($user2_follow_response->content);
+  redis->hmset($username2 . "_friend_ids",
+    "request_date"    => $user2_follow_response->header('Date'),
+    "ids"             => to_json($deserialized_user2_follow_response->{ids}),
+    "previous_cursor" => $deserialized_user2_follow_response->{previous_cursor},
+    "next_cursor"     => $deserialized_user2_follow_response->{next_cursor},
+  );
+
+  # Find intersection
+  my @user1_follow_ids = @{ $deserialized_user1_follow_response->{ids} };
+  my @user2_follow_ids = @{ $deserialized_user2_follow_response->{ids} };
+  my @intersection = intersect(@user1_follow_ids, @user2_follow_ids);
+
+  # Get user objects with intersection list
+  my $lookup_users_response = $self->_response($self->_get_users_lookup_url($self->_separate_by_commas(@intersection)));
+  my $deserialized_lookup_users_response = from_json($lookup_users_response->content);
+  my @followed_users = map { Models::TwitterUser->new($_) } @$deserialized_lookup_users_response;
+  my $serialized_response = to_json({ common_friends => \@followed_users});
+  redis->hmset($username1 . "_" . $username2 . "_intersection",
+    "request_date" => $lookup_users_response->header('Date'),
+    "common_friends" => $serialized_response,
+  );
+
+  return $serialized_response;
+}
+
+sub _intersection_key {
+  my ($self, $username1, $username2) = @_;
+  my $combo1 = redis->hexists($username1 . '_' . $username2 . '_intersection', 'request_date');
+  my $combo2 = redis->hexists($username2 . '_' . $username1 . '_intersection', 'request_date');
+
+  if ($combo1) {
+    return $username1 . '_' . $username2 . '_intersection';
+  } elsif ($combo2) {
+    return $username2 . '_' . $username1 . '_intersection';
+  } else {
+    return 0;
+  }
+}
+
+
 # Private Methods
 sub _response {
   my ($self, $path) = @_;
@@ -114,15 +198,20 @@ sub _get_user_timeline_url {
 }
 
 sub _get_friends_ids_url {
-  my $self = shift;
-  return $self->base_uri . 'friends/ids.json';
+  my ($self, $username) = @_;
+  return $self->base_uri . 'friends/ids.json' . "?screen_name=$username&count=5000";
 }
 
 sub _get_users_lookup_url {
-  my $self = shift;
-  return $self->base_uri . 'users/lookup.json';
+  my ($self, $ids) = @_;
+  return $self->base_uri . 'users/lookup.json' . "?user_id=$ids&include_entities=false";
 }
 
+sub _separate_by_commas {
+  my ($self, @array) = @_;
+  return join ",", @array;
+
+}
  __PACKAGE__->meta->make_immutable;
 
 1;

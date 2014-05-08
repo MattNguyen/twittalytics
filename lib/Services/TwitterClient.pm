@@ -13,4 +13,9 @@ sub get_statuses_for_user {
   return Services::TwitterClient::API->new->get_statuses_for_user($username);
 }
 
+sub get_common_friends {
+  my ($self, $username1, $username2) = @_;
+  return Services::TwitterClient::API->new->get_common_friends($username1, $username2);
+}
+
 1;

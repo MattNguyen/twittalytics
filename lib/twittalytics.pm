@@ -14,9 +14,21 @@ our $VERSION = '0.1';
 prefix '/api';
 
 get "/users/:username/recent_statuses" => sub {
-  my $twitter_client = Services::TwitterClient->new;
   content_type 'application/json';
+
+  my $twitter_client = Services::TwitterClient->new;
   return $twitter_client->get_statuses_for_user(params->{username});
+};
+
+get "/users/common_friends" => sub {
+  content_type 'application/json';
+
+  unless ( params->{username1} && params->{username2} ) {
+    return to_json({error => "Please pass username1 and username2 as params"});
+  }
+
+  my $twitter_client = Services::TwitterClient->new;
+  return $twitter_client->get_common_friends(params->{username1}, params->{username2});
 };
 
 1;
