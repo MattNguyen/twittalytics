@@ -15,3 +15,10 @@ show_errors: 0
 # cache route resolution for maximum performance
 route_cache: 1
 
+plugins:
+  Redis:
+    server: 'pub-redis-13244.us-east-1-4.3.ec2.garantiadata.com:13244'
+    password: 'ZdNscqZ2mMEiDIEv'
+    debug: 0
+    encoding: utf8
+    reconnect: 60

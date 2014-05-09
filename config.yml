@@ -25,10 +25,3 @@ engines:
   JSON:
     allow_blessed: '1'
     convert_blessed: '1'
-
-plugins:
-  Redis:
-    server: '127.0.0.1:6379'
-    debug: 0
-    encoding: utf8
-    reconnect: 60
