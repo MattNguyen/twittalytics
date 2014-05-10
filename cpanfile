@@ -6,3 +6,6 @@ requires 'Dancer::Plugin::Redis';
 requires 'HTTP::Date';
 requires 'Array::Utils';
 requires 'namespace::autoclean';
+requires 'Data::Dumper';
+requires 'LWP::Protocol::https';
+requires 'Mozilla::CA';

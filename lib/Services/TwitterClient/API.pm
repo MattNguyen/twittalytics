@@ -10,6 +10,8 @@ use Models::Tweet;
 use Models::TwitterUser;
 use HTTP::Date;
 use Array::Utils qw(:all);
+use LWP::Protocol::https;
+use Mozilla::CA;
 
 has 'base_uri' => (isa => 'Str', is => 'ro', default => 'https://api.twitter.com/1.1/');
 
@@ -22,7 +24,7 @@ sub get_statuses_for_user {
   if (redis->hexists($username, "request_date")) {
     info "Username '$username' found in cache.";
 
-    my $ttl = 60*60*24;
+    my $ttl = 60;
     my $cached_tweets = redis->hget($username, 'tweets');
     my $request_date  = str2time(redis->hget($username, 'request_date'));
     my $current_date  = str2time(scalar localtime);
@@ -35,57 +37,66 @@ sub get_statuses_for_user {
     if ($current_date > ($request_date + $ttl)) {
       info "Data over TTL time. Renewing stale data...";
 
-      $response        = $self->_response($self->_get_user_timeline_url($username));
-      $parsed_response = from_json($response->content);
+      $response = $self->_response($self->_get_user_timeline_url($username));
+      if ($response->is_success) {
+        my @new_tweets                 = map { Models::Tweet->new($_) } @{ from_json($response->content) };
+        my @deserialized_cached_tweets = @{ from_json($cached_tweets)->{tweets} };
+        my @cached_tweet_objects       = map { Models::Tweet->new($_) } @deserialized_cached_tweets;
+        my $first_cached_tweet         = $cached_tweet_objects[0];
+        my @tweet_results;
 
-      my @new_tweets                 = map { Models::Tweet->new($_) } @$parsed_response;
-      my $deserialized_cache         = from_json($cached_tweets);
-      my @deserialized_cached_tweets = @{$deserialized_cache->{tweets}};
-      my @cached_tweet_objects       = map { Models::Tweet->new($_) } @deserialized_cached_tweets;
-      my $first_cached_tweet         = $cached_tweet_objects[0];
-      my @tweet_results;
-
-      # Compare ID of first tweet in cached_tweets array
-      # Search new tweets array for tweet with first cached_tweet id
-      # Grab newest tweets in array up until first cached_tweet
-      # Append cached_tweets to new tweets
-      if (grep($_->id == $first_cached_tweet->id, @new_tweets)) {
-        my @newest_tweets;
-        foreach my $new_tweet (@new_tweets) {
-          last if $new_tweet->id == $first_cached_tweet->id;
-          push @newest_tweets, $new_tweet;
-        }
-        if (@newest_tweets) {
-          @tweet_results = push @newest_tweets, @cached_tweet_objects;
+        # Compare ID of first tweet in cached_tweets array
+        # Search new tweets array for tweet with first cached_tweet id
+        # Grab newest tweets in array up until first cached_tweet
+        # Append cached_tweets to new tweets
+        if (grep($_->id == $first_cached_tweet->id, @new_tweets)) {
+          my @newest_tweets;
+          foreach my $new_tweet (@new_tweets) {
+            last if $new_tweet->id == $first_cached_tweet->id;
+            push @newest_tweets, $new_tweet;
+          }
+          if (@newest_tweets) {
+            @tweet_results = push @newest_tweets, @cached_tweet_objects;
+          } else {
+            @tweet_results = @cached_tweet_objects;
+          }
         } else {
-          @tweet_results = @cached_tweet_objects;
+          @tweet_results = push @new_tweets, @cached_tweet_objects;
         }
-      } else {
-        @tweet_results = push @new_tweets, @cached_tweet_objects;
-      }
 
-      $serialized_response = to_json({ tweets => \@tweet_results });
+        $serialized_response = to_json({ tweets => \@tweet_results });
+
+        redis->hmset($username,
+          "request_date" => $response->header('Date'),
+          "tweets" => $serialized_response,
+        );
+      } else {
+        info "Data under TTL threshold. Using cached tweets.";
+        $serialized_response = redis->hget($username, "tweets");
+      }
+    } else {
+       $serialized_response = to_json({
+           error  => $response->status_line,
+           status => $response->code,
+       });
+    }
+  } else {
+    $response = $self->_response($self->_get_user_timeline_url($username));
+    if ($response->is_success) {
+      my @tweets = map { Models::Tweet->new($_) } @{ from_json($response->content) };
+
+      $serialized_response = to_json({ tweets => \@tweets });
 
       redis->hmset($username,
         "request_date" => $response->header('Date'),
-        "tweets" => $serialized_response,
+        "tweets"       => $serialized_response,
       );
-    } else {
-      info "Data under TTL threshold. Using cached tweets.";
-      $serialized_response = redis->hget($username, "tweets");
-    }
-  } else {
-    $response        = $self->_response($self->_get_user_timeline_url($username));
-    $parsed_response = from_json($response->content);
-
-    my @tweets = map { Models::Tweet->new($_) } @$parsed_response;
-
-    $serialized_response = to_json({ tweets => \@tweets });
-
-    redis->hmset($username,
-      "request_date" => $response->header('Date'),
-      "tweets" => $serialized_response,
-    );
+     } else {
+       $serialized_response = to_json({
+           error  => $response->status_line,
+           status => $response->code,
+       });
+     }
   }
 
   return $serialized_response;
@@ -182,6 +193,11 @@ sub _response {
 sub _request {
   my $self = shift;
   my $user_agent = LWP::UserAgent->new;
+
+  $user_agent->ssl_opts(
+    verify_hostname => 1,
+    SSL_ca_file     => Mozilla::CA::SSL_ca_file,
+  );
 
   $user_agent->default_header('Authorization' => "Bearer " . $self->_bearer_token);
 
