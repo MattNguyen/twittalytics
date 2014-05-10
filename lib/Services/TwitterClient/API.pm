@@ -21,6 +21,7 @@ sub get_statuses_for_user {
   my $parsed_response;
   my $serialized_response;
 
+  # TODO - For the love of god, fix this monstrosity. -MN 05102014
   if (redis->hexists($username, "request_date")) {
     info "Username '$username' found in cache.";
 
@@ -68,17 +69,14 @@ sub get_statuses_for_user {
 
         redis->hmset($username,
           "request_date" => $response->header('Date'),
-          "tweets" => $serialized_response,
+          "tweets"       => $serialized_response,
         );
       } else {
-        info "Data under TTL threshold. Using cached tweets.";
-        $serialized_response = redis->hget($username, "tweets");
+        $serialized_response = $self->_format_error($response);
       }
     } else {
-       $serialized_response = to_json({
-           error  => $response->status_line,
-           status => $response->code,
-       });
+      info "Data under TTL threshold. Using cached tweets.";
+      $serialized_response = redis->hget($username, "tweets");
     }
   } else {
     $response = $self->_response($self->_get_user_timeline_url($username));
@@ -108,17 +106,22 @@ sub get_common_friends {
   my $intersection_key = $self->_intersection_key($username1, $username2);
   my $serialized_response;
 
-  # FIGURE OUT API PAGINATION
+  # TODO - figure out api pagination. -MN 05102014
   # * getting friend_ids has cursor ids to page back and forth
   # * ids are different depending on user
   # * endpoint should direct requsts with pagination params to some other function that continues the pagination chain to twitter
-  if ($intersection_key) {
-    my $request_date     = str2time(redis->hget($intersection_key, 'request_date'));
-    my $current_date     = str2time(scalar localtime);
+  if (redis->hexists($intersection_key, 'request_date')) {
+    info "$intersection_key found in cache";
+    my $request_date = str2time(redis->hget($intersection_key, 'request_date'));
+    my $current_date = str2time(scalar localtime);
 
     if ($current_date > ($request_date + $ttl)) {
+      info "Data over TTL time. Renewing stale data...";
+
       $serialized_response = $self->_get_intersection_results($username1, $username2);
     } else {
+      info "Data under TTL threshold. Using cached intersection data.";
+
       $serialized_response = redis->hget($intersection_key, "common_friends");
     }
   } else {
@@ -128,45 +131,68 @@ sub get_common_friends {
   return $serialized_response;
 }
 
+# Private Methods
 sub _get_intersection_results {
   my ($self, $username1, $username2) = @_;
+  my $serialized_response;
 
   # Get list of friend ids for username1
-  my $user1_follow_response              = $self->_response($self->_get_friends_ids_url($username1));
-  my $deserialized_user1_follow_response = from_json($user1_follow_response->content);
-  redis->hmset($username1 . "_friend_ids",
-    "request_date"    => $user1_follow_response->header('date'),
-    "ids"             => to_json($deserialized_user1_follow_response->{ids}),
-    "previous_cursor" => $deserialized_user1_follow_response->{previous_cursor},
-    "next_cursor"     => $deserialized_user1_follow_response->{next_cursor},
-  );
+  my $user1_follow_response = $self->_response($self->_get_friends_ids_url($username1));
+  if ($user1_follow_response->is_success) {
+    my $deserialized_user1_follow_response = from_json($user1_follow_response->content);
+    redis->hmset($username1 . "_friend_ids",
+      "request_date"    => $user1_follow_response->header('date'),
+      "ids"             => to_json($deserialized_user1_follow_response->{ids}),
+      "previous_cursor" => $deserialized_user1_follow_response->{previous_cursor},
+      "next_cursor"     => $deserialized_user1_follow_response->{next_cursor},
+    );
 
-  # Get list of friend ids for username2
-  my $user2_follow_response              = $self->_response($self->_get_friends_ids_url($username2));
-  my $deserialized_user2_follow_response = from_json($user2_follow_response->content);
-  redis->hmset($username2 . "_friend_ids",
-    "request_date"    => $user2_follow_response->header('Date'),
-    "ids"             => to_json($deserialized_user2_follow_response->{ids}),
-    "previous_cursor" => $deserialized_user2_follow_response->{previous_cursor},
-    "next_cursor"     => $deserialized_user2_follow_response->{next_cursor},
-  );
+    # Get list of friend ids for username2
+    my $user2_follow_response = $self->_response($self->_get_friends_ids_url($username2));
+    if ($user2_follow_response) {
+      my $deserialized_user2_follow_response = from_json($user2_follow_response->content);
+      redis->hmset($username2 . "_friend_ids",
+        "request_date"    => $user2_follow_response->header('Date'),
+        "ids"             => to_json($deserialized_user2_follow_response->{ids}),
+        "previous_cursor" => $deserialized_user2_follow_response->{previous_cursor},
+        "next_cursor"     => $deserialized_user2_follow_response->{next_cursor},
+      );
 
-  # Find intersection
-  my @user1_follow_ids = @{ $deserialized_user1_follow_response->{ids} };
-  my @user2_follow_ids = @{ $deserialized_user2_follow_response->{ids} };
-  my @intersection = intersect(@user1_follow_ids, @user2_follow_ids);
+      # Find intersection
+      my @user1_follow_ids = @{ $deserialized_user1_follow_response->{ids} };
+      my @user2_follow_ids = @{ $deserialized_user2_follow_response->{ids} };
+      my @intersection = intersect(@user1_follow_ids, @user2_follow_ids);
 
-  # Get user objects with intersection list
-  my $lookup_users_response = $self->_response($self->_get_users_lookup_url($self->_separate_by_commas(@intersection)));
-  my $deserialized_lookup_users_response = from_json($lookup_users_response->content);
-  my @followed_users = map { Models::TwitterUser->new($_) } @$deserialized_lookup_users_response;
-  my $serialized_response = to_json({ common_friends => \@followed_users});
-  redis->hmset($username1 . "_" . $username2 . "_intersection",
-    "request_date" => $lookup_users_response->header('Date'),
-    "common_friends" => $serialized_response,
-  );
+      # Get user objects with intersection list
+      my $lookup_users_response = $self->_response($self->_get_users_lookup_url($self->_separate_by_commas(@intersection)));
+      if ($lookup_users_response->is_success) {
+        my $deserialized_lookup_users_response = from_json($lookup_users_response->content);
+        my @followed_users = map { Models::TwitterUser->new($_) } @$deserialized_lookup_users_response;
+        $serialized_response = to_json({ common_friends => \@followed_users});
+        redis->hmset($username1 . "_" . $username2 . "_intersection",
+          "request_date" => $lookup_users_response->header('Date'),
+          "common_friends" => $serialized_response,
+        );
+      } else {
+        $serialized_response = $self->_format_error($lookup_users_response);
+      }
+    } else {
+      $serialized_response = $self->_format_error($user2_follow_response);
+    }
+
+  } else {
+    $serialized_response = $self->_format_error($user1_follow_response);
+  }
 
   return $serialized_response;
+}
+
+sub _format_error {
+  my ($self, $response) = @_;
+  return to_json({
+           error  => $response->status_line,
+           status => $response->code,
+         });
 }
 
 sub _intersection_key {
@@ -183,8 +209,6 @@ sub _intersection_key {
   }
 }
 
-
-# Private Methods
 sub _response {
   my ($self, $path) = @_;
   return $self->_request->get($path);
