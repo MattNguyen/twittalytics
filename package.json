@@ -5,6 +5,9 @@
     "type" : "git",
     "url" : "https://github.com/MattNguyen/twittalytics.git"
   },
+  "dependencies": {
+    "bower": "~1.2.8"
+  },
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.6.3",
@@ -15,5 +18,8 @@
     "grunt-contrib-clean": "~0.5.0",
     "grunt-ng-constant": "~0.5.0",
     "bower": "~1.2.8"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
   }
 }
