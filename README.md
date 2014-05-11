@@ -32,3 +32,9 @@ Feel free to use any open source tools/libraries that you wish on the perl, java
 * Run `grunt build`
 * `$ perl bin/app.pl` to start the server.
 * Go to http://localhost:3000 in the browser.
+
+### TODOs
+
+* Add pagination to UI and API
+* Move cache updates to background jobs
+* Refactor TwitterClient::API into different objects (request, response, etc.)
