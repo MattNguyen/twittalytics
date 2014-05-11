@@ -22,7 +22,7 @@
 
     <header class="navbar center">
       <div class="navbar-inner">
-        <div class="container">
+        <div class="container-fluid">
           <ul class="nav navbar-nav center">
             <li><a href="/user_statuses">User Statuses</a></li>
             <li class="title">TWITTALYTICS</li>
@@ -32,7 +32,7 @@
       </div>
     </header>
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
           <div ng-view></div>

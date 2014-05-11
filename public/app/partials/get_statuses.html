@@ -1,16 +1,19 @@
-<div class="center">
-  <form class="form-inline center" role="form" ng-submit="getRecentStatuses()">
-    <div class="form-group">
-      <label class="sr-only">Username</label>
-      <input type="text" class="form-control input-md" ng-model="username" placeholder="Enter a Twitter handle">
-    </div>
+<p class='center'>I want the most recent statuses for</p>
 
-    <button type="submit" class="btn btn-danger">Search</button>
-  </form>
+<form class="form-inline center" role="form" ng-submit="getRecentStatuses()">
+  <div class="form-group">
+    <label class="sr-only">Username</label>
+    <input type="text" class="form-control input-md" ng-model="username" placeholder="Enter a Twitter handle">
+  </div>
 
+  <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-search"></span></button>
+</form>
+
+
+<section class="col-md-8 col-md-offset-2 query-results">
   <ul>
     <div ng-repeat="status in recentStatuses">
-      <li>{{status.text}}</li>
+      <li class="query-result">{{status.text}}</li>
     </div>
   </ul>
-</div>
+</section>

@@ -13,7 +13,7 @@ body {
 }
 
 .navbar {
-  margin-bottom: 35px;
+  margin-bottom: 18px;
 }
 
 .center.navbar .nav,
@@ -36,4 +36,44 @@ body {
 .title {
   font-size: 56px;
   font-weight: bold;
+}
+
+.query-results {
+  margin-top: 25px;
+}
+
+.query-results > ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li.query-result {
+  padding: 20px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  background: rgb(210, 50, 45);
+  color: white;
+  font-weight: bold;
+}
+
+li.query-result > img {
+  margin-right: 20px;
+}
+
+span.screen-name {
+  font-size: 20px;
+}
+
+span.real-name {
+  font-weight: normal;
+}
+
+.description {
+  display: inline-block;
+  width: 50%;
+  vertical-align: middle;
+}
+
+.float-right {
+  float: right;
 }

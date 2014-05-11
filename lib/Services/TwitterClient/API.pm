@@ -25,7 +25,7 @@ sub get_statuses_for_user {
   if (redis->hexists($username, "request_date")) {
     info "Username '$username' found in cache.";
 
-    my $ttl = 60*60*24;
+    my $ttl = 60*60*60*24;
     my $cached_tweets = redis->hget($username, 'tweets');
     my $request_date  = str2time(redis->hget($username, 'request_date'));
     my $current_date  = str2time(scalar localtime);
@@ -102,7 +102,7 @@ sub get_statuses_for_user {
 
 sub get_common_friends {
   my ($self, $username1, $username2) = @_;
-  my $ttl = 60*60*24;
+  my $ttl = 60*60*60*24;
   my $intersection_key = $self->_intersection_key($username1, $username2);
   my $serialized_response;
 

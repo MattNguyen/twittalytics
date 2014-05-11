@@ -10,7 +10,7 @@ services.factory('RecentStatuses', ['$http', 'API_URL', function($http, API_URL)
   return RecentStatuses;
 }])
 
-services.factory('CommonFriends', ['$http', function($http) {
+services.factory('CommonFriends', ['$http', 'API_URL', function($http, API_URL) {
   var CommonFriends = function(data) { angular.extend(this, data) };
 
   CommonFriends = function(username1, username2) {
