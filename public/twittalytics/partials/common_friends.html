@@ -1,0 +1,14 @@
+<form class="form-horizontal" ng-submit="getCommonFriends()" >
+  <input type="text" class="form-control" ng-model="username1" placeholder="Enter a Twitter handle" />
+  <input type="text" class="form-control" ng-model="username2" placeholder="Enter a Twitter handle" />
+  <input type="submit" id="submit" value="Search" class="btn-primary">
+</form>
+
+<ul>
+  <div ng-repeat="user in commonFriends">
+    <li>
+      <img src="{{user.profile_image_url}}" alt="{{user.name}} Photo" />
+      {{user.name}}
+    </li>
+  </div>
+</ul>

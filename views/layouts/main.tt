@@ -1,32 +1,42 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=[% settings.charset %]" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="An app that does stuff with the Twitter API" />
+    <meta name="author" content="@MrMattNguyen" />
 
-<meta http-equiv="Content-type" content="text/html; charset=[% settings.charset %]" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
+    <title>[% settings.appname %]</title>
 
-<title>[% settings.appname %]</title>
+    <link rel="stylesheet" href="[% request.uri_base %]/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="[% request.uri_base %]/fontawesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="[% request.uri_base %]/css/style.css" />
+  </head>
 
-<link rel="stylesheet" href="[% request.uri_base %]/bootstrap/css/bootstrap.css" >
-<link rel="stylesheet" href="[% request.uri_base %]/fontawesome/css/font-awesome.css" >
-<link rel="stylesheet" href="[% request.uri_base %]/css/style.css" >
+  <body ng-app="twittalytics">
 
-</head>
-<body>
+    <div class="container">
 
-[% content %]
+      <div class="row">
+        <div class="col-md-3">
+          <ul class="nav">
+            <li><a href="/user_statuses">User Statuses</a></li>
+            <li><a href="/common_friends">Common Friends</a></li>
+          </ul>
+        </div>
+      </div>
 
-<script src="[% request.uri_base %]/javascripts/jquery-1.7.2.min.js"></script>
-<script src="[% request.uri_base %]/bootstrap/js/bootstrap.min.js"></script>
-<script>
-  $(document).ready(function()
-      {
-      });
-</script>
+      <div ng-view></div>
 
+    </div>
 
-</body>
+    <script src="[% request.uri_base %]/javascripts/jquery-1.7.2.min.js"></script>
+    <script src="[% request.uri_base %]/bootstrap/js/bootstrap.min.js"></script>
+    <script src="[% request.uri_base %]/angular/angular.js"></script>
+    <script src="[% request.uri_base %]/angular/angular-route.js"></script>
+
+    <script src="[% request.uri_base %]/twittalytics/controllers.js"></script>
+    <script src="[% request.uri_base %]/twittalytics/services.js"></script>
+    <script src="[% request.uri_base %]/twittalytics/twittalytics.js"></script>
+  </body>
 </html>

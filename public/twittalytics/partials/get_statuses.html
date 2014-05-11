@@ -1,0 +1,10 @@
+<form class="form-horizontal" ng-submit="getRecentStatuses()">
+  <input type="text" class="form-control" ng-model="username" placeholder="Enter a Twitter handle (e.g. MrMattNguyen)">
+  <input type="submit" id="submit" value="Search" class="btn-primary">
+</form>
+
+<ul>
+  <div ng-repeat="status in recentStatuses">
+    <li>{{status.text}}</li>
+  </div>
+</>

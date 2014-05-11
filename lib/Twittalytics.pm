@@ -11,6 +11,11 @@ use Services::TwitterClient;
 
 our $VERSION = '0.1';
 
+get '/' => sub {
+  template 'layouts/main';
+};
+
+# API
 prefix '/api';
 
 get "/users/:username/recent_statuses" => sub {

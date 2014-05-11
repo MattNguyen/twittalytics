@@ -12,6 +12,15 @@ lib/Services/TwitterClient.pm
 lib/Services/TwitterClient/Authentication.pm
 lib/Services/TwitterClient/API.pm
 lib/Twittalytics.pm
+public/angular/angular-route.js
+public/angular/angular.min.js
+public/angular/angular.js
+public/twittalytics/partials/common_friends.html
+public/twittalytics/partials/get_statuses.html
+public/twittalytics/partials/index.html
+public/twittalytics/controllers.js
+public/twittalytics/services.js
+public/twittalytics/twittalytics.js
 public/css/style.css
 public/css/error.css
 public/images/perldancer-bg.jpg
