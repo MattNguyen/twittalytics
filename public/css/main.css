@@ -1,1 +1,35 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  position: relative;
+}
 
+body {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+form {
+  max-width: 600px;
+}
+
+.center.navbar .nav,
+.center.navbar .nav > li {
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+  *zoom:1; /* hasLayout ie7 trigger */
+  vertical-align: top;
+}
+
+.center .navbar-inner {
+  text-align:center;
+}
+
+.title {
+  font-size: 56px;
+  font-weight: bold;
+}

@@ -12,7 +12,7 @@
     <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     [% IF settings.environment == 'development' %]
-      <link href="/css/styles.css" rel="stylesheet" />
+      <link href="/css/main.css" rel="stylesheet" />
     [% ELSE %]
       <link href="/css/build/style.min.css" rel="stylesheet" />
     [% END %]
@@ -20,19 +20,20 @@
 
   <body ng-app="twittalytics">
 
-    <div class="container">
-
-      <div class="row">
-        <div class="col-md-3">
-          <ul class="nav">
+    <header class="navbar center">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav navbar-nav center">
             <li><a href="/user_statuses">User Statuses</a></li>
+            <li class="title">TWITTALYTICS</li>
             <li><a href="/common_friends">Common Friends</a></li>
           </ul>
         </div>
       </div>
+    </header>
 
+    <div class="container">
       <div ng-view></div>
-
     </div>
 
     [% IF settings.environment == 'development' %]
