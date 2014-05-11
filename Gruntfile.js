@@ -78,7 +78,7 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('heroku:production', ['clean','concat','uglify','cssmin','ngconstant:production']);
+  grunt.registerTask('heroku', ['clean','concat','uglify','cssmin','ngconstant:production']);
   grunt.registerTask('default', ['clean','concat','uglify','cssmin', 'ngconstant:development']);
 
 };
