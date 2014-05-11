@@ -7,8 +7,8 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function($rout
   $locationProvider.hashPrefix('!');
 
   $routeProvider
-    .when('/', { controller: 'HomeController', templateUrl: '/twittalytics/partials/index.html' })
-    .when('/user_statuses', { controller: 'StatusesController', templateUrl: '/twittalytics/partials/get_statuses.html' })
-    .when('/common_friends', { controller: 'CommonFriendsController', templateUrl: '/twittalytics/partials/common_friends.html' })
+    .when('/', { controller: 'HomeController', templateUrl: '/app/partials/index.html' })
+    .when('/user_statuses', { controller: 'StatusesController', templateUrl: '/app/partials/get_statuses.html' })
+    .when('/common_friends', { controller: 'CommonFriendsController', templateUrl: '/app/partials/common_friends.html' })
     .otherwise({ redirectTo: '/' });
 }]);

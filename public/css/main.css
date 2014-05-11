@@ -12,21 +12,25 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-form {
-  max-width: 600px;
+.navbar {
+  margin-bottom: 35px;
 }
 
 .center.navbar .nav,
 .center.navbar .nav > li {
-  float:none;
-  display:inline-block;
-  *display:inline; /* ie7 fix */
+  float: none;
+  display: inline-block;
+  *display: inline; /* ie7 fix */
   *zoom:1; /* hasLayout ie7 trigger */
   vertical-align: top;
 }
 
-.center .navbar-inner {
-  text-align:center;
+.center {
+  text-align: center;
+}
+
+.navbar-nav>li>a {
+  margin-top: 16px;
 }
 
 .title {

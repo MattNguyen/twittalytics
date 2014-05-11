@@ -1,14 +1,16 @@
-<form class="form-inline" role="form" ng-submit="getRecentStatuses()">
-  <div class="form-group">
-    <label class="sr-only">Username</label>
-    <input type="text" class="form-control" ng-model="username" placeholder="Enter a Twitter handle (e.g. MrMattNguyen)">
-  </div>
+<div class="center">
+  <form class="form-inline center" role="form" ng-submit="getRecentStatuses()">
+    <div class="form-group">
+      <label class="sr-only">Username</label>
+      <input type="text" class="form-control input-md" ng-model="username" placeholder="Enter a Twitter handle">
+    </div>
 
-  <input type="submit" class="btn btn-default" value"Search">
-</form>
+    <button type="submit" class="btn btn-danger">Search</button>
+  </form>
 
-<ul>
-  <div ng-repeat="status in recentStatuses">
-    <li>{{status.text}}</li>
-  </div>
-</ul>
+  <ul>
+    <div ng-repeat="status in recentStatuses">
+      <li>{{status.text}}</li>
+    </div>
+  </ul>
+</div>
