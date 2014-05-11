@@ -11,4 +11,5 @@ local
 public/bower_components
 public/app/build
 public/css/build
+public/app/config.js
 

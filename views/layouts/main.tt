@@ -47,6 +47,7 @@
       <script src="/bower_components/angular/angular.js"></script>
       <script src="/bower_components/angular-route/angular-route.js"></script>
 
+      <script src="[% request.uri_base %]/app/config.js"></script>
       <script src="[% request.uri_base %]/app/controllers.js"></script>
       <script src="[% request.uri_base %]/app/services.js"></script>
       <script src="[% request.uri_base %]/app/app.js"></script>

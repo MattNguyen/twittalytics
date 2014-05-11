@@ -22,7 +22,7 @@ engines:
     encoding:  'utf8'
     start_tag: '[%'
     end_tag:   '%]'
-    JSON:
+  JSON:
     allow_blessed: '1'
     convert_blessed: '1'
 

@@ -15,6 +15,10 @@ get '/' => sub {
   template 'layouts/main';
 };
 
+get '/*' => sub {
+  template 'layouts/main';
+};
+
 # API
 prefix '/api';
 

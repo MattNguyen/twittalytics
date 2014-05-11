@@ -1,4 +1,4 @@
-var app = angular.module('twittalytics', ['ngRoute', 'twittalytics.services', 'twittalytics.controllers'])
+var app = angular.module('twittalytics', ['ngRoute', 'twittalytics.services', 'twittalytics.controllers']);
 
 app.config(['$routeProvider','$locationProvider','$httpProvider', function($routeProvider,$locationProvider,$httpProvider) {
   $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';

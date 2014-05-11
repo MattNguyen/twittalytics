@@ -7,6 +7,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-ng-constant');
 
   var pkg = grunt.file.readJSON('package.json');
   var dancer = grunt.file.readYAML('config.yml');
@@ -55,10 +56,29 @@ module.exports = function(grunt) {
         src: css_build_path,
         dest: css_build_min_path
       }
+    },
+
+    ngconstant: {
+      options: {
+        name: 'config',
+        dest: 'public/app/config.js',
+        space: '  '
+      },
+      development: {
+        constants: {
+          API_URL: "http://localhost:3000/api/"
+        }
+      },
+      production: {
+        constants: {
+          API_URL: "http://twittalytics-herokuapp.com/api/"
+        }
+      }
     }
 
   });
 
-  grunt.registerTask('default', ['clean','concat','uglify','cssmin']);
+  grunt.registerTask('default', ['clean','concat','uglify','cssmin','ngconstant:production']);
+  grunt.registerTask('build', ['default', 'ngconstant:development']);
 
 };
