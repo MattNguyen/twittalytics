@@ -2,6 +2,13 @@
 .*.swp
 *~
 
-public/bootstrap*
-public/fontawesome*
 .env
+.tmp
+.sass-cache
+logs
+node_modules
+local
+public/bower_components
+public/app/build
+public/css/build
+

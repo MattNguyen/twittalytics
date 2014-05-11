@@ -1,0 +1,29 @@
+{
+  "name": "Twittalytics",
+  "version": "0.0.1",
+  "authors": [
+    "mnguyen916@gmail.com"
+  ],
+  "directory": "public/bower_components",
+  "description": "Does things with the Twitter API",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ],
+  "dependencies": {
+    "angular": "~1.2.8",
+    "angular-route": "~1.2.8",
+    "jquery": "~2.0.3",
+    "bootstrap": "~3.0.3",
+    "font-awesome": "~4.0.3"
+  },
+  "devDependencies": {
+    "angular": "~1.2.8",
+    "angular-route": "~1.2.8",
+    "jquery": "~2.0.3",
+    "bootstrap": "~3.0.3",
+    "font-awesome": "~4.0.3"
+  }
+}

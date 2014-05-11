@@ -8,9 +8,14 @@
 
     <title>[% settings.appname %]</title>
 
-    <link rel="stylesheet" href="[% request.uri_base %]/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" href="[% request.uri_base %]/fontawesome/css/font-awesome.css" />
-    <link rel="stylesheet" href="[% request.uri_base %]/css/style.css" />
+    <link href="/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    [% IF settings.environment == 'development' %]
+      <link href="/css/styles.css" rel="stylesheet" />
+    [% ELSE %]
+      <link href="/css/build/style.min.css" rel="stylesheet" />
+    [% END %]
   </head>
 
   <body ng-app="twittalytics">
@@ -30,13 +35,26 @@
 
     </div>
 
-    <script src="[% request.uri_base %]/javascripts/jquery-1.7.2.min.js"></script>
-    <script src="[% request.uri_base %]/bootstrap/js/bootstrap.min.js"></script>
-    <script src="[% request.uri_base %]/angular/angular.js"></script>
-    <script src="[% request.uri_base %]/angular/angular-route.js"></script>
+    [% IF settings.environment == 'development' %]
 
-    <script src="[% request.uri_base %]/twittalytics/controllers.js"></script>
-    <script src="[% request.uri_base %]/twittalytics/services.js"></script>
-    <script src="[% request.uri_base %]/twittalytics/twittalytics.js"></script>
+      <script src="/bower_components/jquery/jquery.js"></script>
+      <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+      <script src="/bower_components/angular/angular.js"></script>
+      <script src="/bower_components/angular-route/angular-route.js"></script>
+
+      <script src="[% request.uri_base %]/twittalytics/controllers.js"></script>
+      <script src="[% request.uri_base %]/twittalytics/services.js"></script>
+      <script src="[% request.uri_base %]/twittalytics/twittalytics.js"></script>
+
+    [% ELSE %]
+
+      <script src="/bower_components/jquery/jquery.min.js"></script>
+      <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+      <script src="/bower_components/angular/angular.min.js"></script>
+      <script src="/bower_components/angular-route/angular-route.min.js"></script>
+
+      <script src="/app/build/app.min.js"></script>
+
+    [% END %]
   </body>
 </html>

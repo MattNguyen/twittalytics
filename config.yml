@@ -22,6 +22,22 @@ engines:
     encoding:  'utf8'
     start_tag: '[%'
     end_tag:   '%]'
-  JSON:
+    JSON:
     allow_blessed: '1'
     convert_blessed: '1'
+
+assets:
+  js:
+    build_folder: "public/app/build"
+    build_file: "app.js"
+    build_file_min: "app.min.js"
+    files:
+      - "public/app/app.js"
+      - "public/app/services.js"
+      - "public/app/controllers.js"
+  css:
+    build_folder: "public/css/build"
+    build_file: "styles.css"
+    build_file_min: "styles.min.css"
+    files:
+      - "public/css/styles.css"
