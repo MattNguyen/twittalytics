@@ -71,7 +71,7 @@ module.exports = function(grunt) {
       },
       production: {
         constants: {
-          API_URL: "http://twittalytics-herokuapp.com/api/"
+          API_URL: "http://twittalytics.herokuapp.com/api/"
         }
       }
     }
