@@ -38,3 +38,13 @@ Feel free to use any open source tools/libraries that you wish on the perl, java
 * Add pagination to UI and API
 * Move cache updates to background jobs
 * Refactor TwitterClient::API into different objects (request, response, etc.)
+* Client and server-side error handling
+* Animations
+* Make mobile friendly
+
+### Notes
+
+* Deploying this to heroku was a bit of a hasssle, but quite educational. I was able to leverage the existing work of two custom buildpacks:
+  * [Perloku](https://github.com/judofyr/perloku)
+  * [Heroku Buildpack NodeJS Grunt](https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt)
+  * [My custom buldpack](https://github.com/MattNguyen/perloku)
