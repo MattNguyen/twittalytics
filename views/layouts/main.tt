@@ -12,10 +12,6 @@
     <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <link href="/css/main.css" rel="stylesheet" />
-    <!--[% IF settings.environment == 'development' %]-->
-    <!--[% ELSE %]-->
-    <!--<link href="/css/build/style.min.css" rel="stylesheet" />-->
-    <!--[% END %]-->
   </head>
 
   <body ng-app="twittalytics">
@@ -49,17 +45,5 @@
     <script src="[% request.uri_base %]/app/controllers.js"></script>
     <script src="[% request.uri_base %]/app/services.js"></script>
     <script src="[% request.uri_base %]/app/app.js"></script>
-
-    <!--[% IF settings.environment == 'development' %]-->
-    <!--[% ELSE %]-->
-
-      <!--<script src="/bower_components/jquery/jquery.min.js"></script>-->
-      <!--<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-      <!--<script src="/bower_components/angular/angular.min.js"></script>-->
-      <!--<script src="/bower_components/angular-route/angular-route.min.js"></script>-->
-
-      <!--<script src="/app/build/app.min.js"></script>-->
-
-    <!--[% END %]-->
   </body>
 </html>
