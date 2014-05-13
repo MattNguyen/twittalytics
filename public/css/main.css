@@ -78,17 +78,23 @@ h1.title {
 }
 
 @media (min-width: 0px) and (max-width: 768px) {
-.responsive-block {
-  display: block;
-  position: relative;
-  min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
-}
+  .responsive-block {
+    display: block;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
   .responsive-block .btn {
     display:block;
     width: 100%;
   }
+
+  li.query-result > img {
+    float: left;
+  }
+
 }
 
 .query-results {
@@ -111,14 +117,30 @@ li.query-result {
 
 li.query-result > img {
   margin-right: 20px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.names {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 span.screen-name {
   font-size: 20px;
+  display: block;
 }
 
 span.real-name {
+  display: block;
   font-weight: normal;
+}
+
+@media (min-width: 0px) and (max-width: 768px) {
+  .names {
+    display: block;
+    text-align: center;
+  }
 }
 
 .description {
@@ -130,3 +152,4 @@ span.real-name {
 .float-right {
   float: right;
 }
+

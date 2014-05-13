@@ -31,10 +31,12 @@
     <div ng-repeat="user in commonFriends">
       <li class="query-result">
         <img class="img-rounded" src="{{user.profile_image_url}}" alt="{{user.name}} Photo" />
-        <span class="screen-name">{{user.screen_name}}</span>
-        <span class="real-name">({{user.name}})</span>
+        <div class="names">
+          <span class="screen-name">{{user.screen_name}}</span>
+          <span class="real-name">({{user.name}})</span>
+        </div>
 
-        <div class="description float-right hidden-sm hidden-xs">{{user.description}}</div>
+        <div class="description float-right visible-md visible-lg">{{user.description}}</div>
       </li>
     </div>
   </ul>
