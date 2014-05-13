@@ -16,12 +16,24 @@
 
   <body ng-app="twittalytics">
 
-    <header class="navbar center">
+    <header class="navbar center hidden-xs hidden-s">
       <div class="navbar-inner">
         <div class="container-fluid">
           <ul class="nav navbar-nav center">
             <li><a href="/user_statuses">User Statuses</a></li>
-            <li class="title">TWITTALYTICS</li>
+            <span class="title">TWITTALYTICS</span>
+            <li><a href="/common_friends">Common Friends</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <header class="navbar center hidden-md hidden-lg">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <h1 class="title">TWITTALYTICS</h1>
+          <ul class="nav navbar-nav center">
+            <li><a href="/user_statuses">User Statuses</a></li>
             <li><a href="/common_friends">Common Friends</a></li>
           </ul>
         </div>
