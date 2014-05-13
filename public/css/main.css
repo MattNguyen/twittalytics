@@ -48,6 +48,34 @@ h1.title {
   font-weight: bold;
 }
 
+.form-instruction {
+  margin-bottom: 15px;
+}
+
+.input-separator {
+  display: inline;
+}
+
+.responsive-block {
+  display: inline;
+  position: relative;
+  min-height: 1px;
+}
+
+@media (min-width: 400px) and (max-width: 768px) {
+.responsive-block {
+  display: block;
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+  .responsive-block .btn {
+    display:block;
+    width: 100%;
+  }
+}
+
 .query-results {
   margin-top: 25px;
 }

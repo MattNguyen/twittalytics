@@ -1,19 +1,29 @@
-<p class="center">Find the intersection of common friends between</p>
+<p class="center form-instruction">Find the intersection of common friends between</p>
 
 <form class="form-inline center" role="form" ng-submit="getCommonFriends()" >
   <div class="form-group">
     <label class="sr-only">Username 1</label>
-    <input type="text" class="form-control input-md" ng-model="username1" placeholder="e.g. MrMattNguyen" />
+    <div class="col-md-4 visible-sm visible-xs">
+      <input type="text" class="form-control input-md" ng-model="username1" placeholder="e.g. MrMattNguyen" />
+    </div>
+    <input type="text" class="form-control input-md visible-md visible-lg" ng-model="username1" placeholder="e.g. MrMattNguyen" />
   </div>
 
-  and
+  <div class="form-group">
+    <span class="form-separator">and</span>
+  </div>
 
   <div class="form-group">
     <label class="sr-only">Username 2</label>
-    <input type="text" class="form-control input-md" ng-model="username2" placeholder="e.g. _bsiddiqui" />
+    <div class="col-md-4 visible-sm visible-xs">
+      <input type="text" class="form-control input-md" ng-model="username2" placeholder="e.g. _bsiddiqui" />
+    </div>
+    <input type="text" class="form-control input-md visible-md visible-lg" ng-model="username2" placeholder="e.g. _bsiddiqui" />
   </div>
 
-  <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-search"></span></button>
+  <div class="responsive-block">
+    <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-search"></span></button>
+  </div>
 </form>
 
 <section class="col-md-8 col-md-offset-2 query-results">

@@ -3,12 +3,16 @@
 <form class="form-inline center" role="form" ng-submit="getRecentStatuses()">
   <div class="form-group">
     <label class="sr-only">Username</label>
-    <input type="text" class="form-control input-md" ng-model="username" placeholder="Enter a Twitter handle">
+    <div class="col-md-4 visible-sm visible-xs">
+      <input type="text" class="form-control input-md" ng-model="username" placeholder="Enter a Twitter handle">
+    </div>
+    <input type="text" class="form-control input-md visible-lg visible-md" ng-model="username" placeholder="Enter a Twitter handle">
   </div>
 
-  <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-search"></span></button>
+  <div class="responsive-block">
+    <button type="submit" class="btn btn-danger responsive-block"><span class="glyphicon glyphicon-search"></span></button>
+  </div>
 </form>
-
 
 <section class="col-md-8 col-md-offset-2 query-results">
   <ul>

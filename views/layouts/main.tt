@@ -16,7 +16,7 @@
 
   <body ng-app="twittalytics">
 
-    <header class="navbar center hidden-xs hidden-s">
+    <header class="navbar center visible-md visible-lg">
       <div class="navbar-inner">
         <div class="container-fluid">
           <ul class="nav navbar-nav center">
@@ -28,7 +28,7 @@
       </div>
     </header>
 
-    <header class="navbar center hidden-md hidden-lg">
+    <header class="navbar center visible-xs visible-sm">
       <div class="navbar-inner">
         <div class="container-fluid">
           <h1 class="title">TWITTALYTICS</h1>
