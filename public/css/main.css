@@ -77,7 +77,7 @@ h1.title {
   min-height: 1px;
 }
 
-@media (min-width: 400px) and (max-width: 768px) {
+@media (min-width: 0px) and (max-width: 768px) {
 .responsive-block {
   display: block;
   position: relative;
